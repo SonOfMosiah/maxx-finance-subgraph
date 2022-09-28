@@ -1,0 +1,22 @@
+{
+  "polygon": {
+    "MaxxStake": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Marketplace": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  },
+  "mumbai": {
+    "MaxxStake": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Marketplace": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  }
+}

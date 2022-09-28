@@ -1,0 +1,46 @@
+{
+  "name": "contract-subgraph",
+  "version": "1.0.0",
+  "description": "Subgraph repository",
+  "main": "index.js",
+  "workspaces": [
+    "subgraphs/*"
+  ],
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "create-local": "graph create --node http://localhost:8020/ <insert project-name>",
+    "remove-local": "graph remove --node http://localhost:8020/ <insert project-name>",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 <insert project-name>",
+    "deploy": "graph deploy --studio <insert project-name>",
+    "prepare:mumbai": "pnpm workspaces run prepare:mumbai",
+    "prepare:polygon": "pnpm workspaces run prepare:polygon",
+    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service ammonwerner1/amplifier-mumbai --network mumbai",
+    "deploy:polygon": "graph deploy --studio <insert project-name>"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/altalabsdev/bartrr-subgraph.git"
+  },
+  "keywords": [
+    "subgraph",
+    "ethereum",
+    "graphql",
+    "web3",
+    "blockchain"
+  ],
+  "author": "Alta Web3 Labs <sonofmosiah.eth>",
+  "license": "MIT",
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.33.0",
+    "@graphprotocol/graph-ts": "^0.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.0",
+    "@typescript-eslint/parser": "^5.35.0",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "handlebars": "^4.7.7",
+    "mustache": "^4.2.0",
+    "prettier": "^2.7.0",
+    "typescript": "^4.7.4"
+  }
+}

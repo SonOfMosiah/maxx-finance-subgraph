@@ -1,0 +1,14 @@
+{
+  "polygon": {
+    "FreeClaim": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  },
+  "mumbai": {
+    "FreeClaim": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "polygon": {
+    "LiquidityAmplifier": {
+      "address": "0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40",
+      "startBlock": 27795205
+    }
+  },
+  "mumbai": {
+    "LiquidityAmplifier": {
+      "address": "0x0D4800Df7901C3A6216Ee7cd0518856824E77a02",
+      "startBlock": 28227137
+    }
+  }
+}

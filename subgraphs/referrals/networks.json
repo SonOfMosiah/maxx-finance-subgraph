@@ -1,0 +1,46 @@
+{
+  "polygon": {
+    "LiquidityAmplifier": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "FreeClaim": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "MaxxStake": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Maxx": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Marketplace": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  },
+  "mumbai": {
+    "LiquidityAmplifier": {
+      "address": "0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40",
+      "startBlock": 27795205
+    },
+    "FreeClaim": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "MaxxStake": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Maxx": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    },
+    "Marketplace": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  }
+}

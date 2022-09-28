@@ -1,0 +1,14 @@
+{
+  "polygon": {
+    "Maxx": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  },
+  "mumbai": {
+    "Maxx": {
+      "address": "0xxyz..",
+      "startBlock": 456
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "maxx-stake-subgraph",
+  "private": true,
+  "license": "MIT",
+  "version": "1.0.0",
+  "author": "Alta Web3 Labs",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service maxx-finance/liquidity-amplifier-mumbai",
+    "deploy:polygon": "graph deploy --studio <insert project-name>"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.33.1",
+    "@graphprotocol/graph-ts": "^0.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "handlebars": "^4.7.7",
+    "mustache": "^4.2.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
+  }
+}

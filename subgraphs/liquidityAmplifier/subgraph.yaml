@@ -1,0 +1,47 @@
+specVersion: 0.0.4
+description: Liquidity Amplifier Subgraph
+features:
+  - nonFatalErrors
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: LiquidityAmplifier
+    network: mumbai
+    source:
+      abi: LiquidityAmplifier
+      address: "0x0D4800Df7901C3A6216Ee7cd0518856824E77a02"
+      startBlock: 28227137
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LiquidityAmplifier
+        - Day
+        - Participant
+        - Deposit
+        - Referral
+        - Referrer
+        - Claim
+      abis:
+        - name: LiquidityAmplifier
+          file: ./abi/LiquidityAmplifier.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed uint256,indexed address)
+          handler: handleDeposit
+        - event: Claim(indexed address,uint256)
+          handler: handleClaim
+        - event: ClaimReferral(indexed address,uint256)
+          handler: handleClaimReferral
+        - event: Referral(indexed address,indexed address,uint256)
+          handler: handleReferral
+        - event: StakeAddressSet(indexed address)
+          handler: handleStakeAddressSet
+        - event: MaxxGenesisSet(indexed address)
+          handler: handleMaxxGenesisSet
+        - event: LaunchDateUpdated(uint256)
+          handler: handleLaunchDateUpdated
+        - event: MaxxGenesisMinted(indexed address,string)
+          handler: handleMaxxGenesisMinted
+      file: ./src/mapping.ts

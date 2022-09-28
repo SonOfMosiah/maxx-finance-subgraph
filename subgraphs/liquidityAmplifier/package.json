@@ -1,0 +1,25 @@
+{
+  "name": "liquidity-amplifier-subgraph",
+  "private": true,
+  "license": "MIT",
+  "version": "1.0.0",
+  "author": "Alta Web3 Labs",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "prepare:mumbai": "mustache config/mumbai.json template.yaml > subgraph.yaml",
+    "prepare:polygon": "mustache config/polygon.json template.yaml > subgraph.yaml",
+    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service ammonwerner1/amplifier-mumbai --network mumbai",
+    "deploy:polygon": "graph deploy --studio <insert project-name>"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.33.1",
+    "@graphprotocol/graph-ts": "^0.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
+  }
+}
