@@ -7,10 +7,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "prepare:mumbai": "mustache config/mumbai.json template.yaml > subgraph.yaml",
-    "prepare:polygon": "mustache config/polygon.json template.yaml > subgraph.yaml",
-    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service maxx-finance/liquidity-amplifier-mumbai",
-    "deploy:polygon": "graph deploy --studio <insert project-name>"
+    "deployReferrals:mumbai": "graph deploy --product hosted-service ammonwerner1/maxx-referrals-mumbai --network mumbai",
+    "deployReferrals:polygon": "graph deploy --studio <insert project-name> --network polygon"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.33.1",
