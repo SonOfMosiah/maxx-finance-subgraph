@@ -1,71 +1,28 @@
-type LiquidityAmplifier @entity {
-  # Contract address
-  id: ID!
-  # MaxxVault address
-  maxxVault: Bytes!
-  # Amplifier Launch Date
-  launchDate: BigInt!
-  # Maxx Stake Contract Address
-  stake: Bytes!
-  # Maxx Finance Token Contract Address
-  maxx: Bytes!
-}
-
-type Day @entity {
-  # Day (1-60)
-  id: ID!
-  maxxAllocation: BigInt!
-  effectiveMaticDeposits: BigInt!
-  maticDeposited: BigInt!
-  totalDeposits: BigInt!
-  deposits: [Deposit!]! @derivedFrom(field: "day")
-  referrals: [Referral!]! @derivedFrom(field: "day")
-}
-
-type Participant @entity {
+type Referrer @entity {
   # User Address
   id: ID!
-  # dailyDeposits: [BigInt!]!
-  # effectiveDailyDeposits: [BigInt!]!
-  # effectiveUserReferrals: [BigInt!]!
-  participated: Boolean!
-  deposits: [Deposit!]! @derivedFrom(field: "participant")
+  totalReferrals: BigInt!
   referrals: [Referral!]! @derivedFrom(field: "referrer")
-}
-
-type Deposit @entity {
-  # Transaction hash
-  id: ID!
-  # ID String of the Participant
-  participant: Participant!
-  # Amount of Matic deposited
-  amount: BigInt!
-  # Amount after bonus calculations
-  effectiveAmount: BigInt!
-  # ID String of the Day
-  day: Day!
 }
 
 type Referral @entity {
   # Transaction hash
   id: ID!
   # ID String of the Participant
-  referrer: Participant!
+  referrer: Referrer!
   # ID String of the Participant
-  referral: Participant!
+  referral: Bytes!
   # Amount of Matic deposited
-  referredAmount: BigInt!
-  # Amount after bonus calculations
-  effectiveReferredAmount: BigInt!
-  # ID String of the Day
-  day: Day!
+  type: ReferralType!
+  # Timestamp of the referral
+  timestamp: BigInt!
 }
 
-type Claim @entity {
-  # Transaction hash
-  id: ID!
-  # ID String of the Participant
-  participant: Participant!
-  # Amount of Maxx claimed
-  amount: BigInt!
+enum ReferralType {
+  # Amplifier Referral
+  AMPLIFIER
+  # Free Claim Referral
+  FREECLAIM
+  # Stake Referral
+  STAKE
 }
