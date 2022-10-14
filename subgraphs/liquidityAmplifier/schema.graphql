@@ -19,6 +19,10 @@ type LiquidityAmplifier @entity {
   totalEffectiveMatic: BigInt!
   # Total Matic Deposited / Maxx Allocation
   totalMaxxPerMatic: BigInt
+  deposits: [Deposit!]!
+  nextDepositUpdateIndex: BigInt!
+  referrals: [Referral!]!
+  nextReferralUpdateIndex: BigInt!
 }
 
 type Day @entity {
@@ -28,7 +32,7 @@ type Day @entity {
   maticDeposited: BigInt!
   effectiveMaticDeposited: BigInt!
   totalDeposits: BigInt!
-  # maxxPerMatic: BigInt!
+  maxxPerEffectiveMatic: BigInt
   deposits: [Deposit!]! @derivedFrom(field: "day")
   referrals: [Referral!]! @derivedFrom(field: "day")
 }
@@ -51,6 +55,8 @@ type Deposit @entity {
   amount: BigInt!
   # Amount after bonus calculations
   effectiveAmount: BigInt!
+  # Amount of Maxx
+  maxxAmount: BigInt
   # ID String of the Day
   day: Day!
 }
@@ -66,6 +72,8 @@ type Referral @entity {
   referredAmount: BigInt!
   # Amount after bonus calculations
   effectiveReferredAmount: BigInt!
+  # Amount of Maxx
+  maxxAmount: BigInt
   # ID String of the Day
   day: Day!
   # Transaction block.timestamp

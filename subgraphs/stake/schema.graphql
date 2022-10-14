@@ -3,36 +3,49 @@ type MaxxStake @entity {
   id: ID!
   # MaxxVault address
   maxxVault: Bytes!
-  # Amplifier Launch Date
-  launchDate: BigInt!
-  # Maxx Stake Contract Address
-  stake: Bytes!
-  # Maxx Finance Token Contract Address
+  # MAXX token address
   maxx: Bytes!
-
+  # MAXXBoost address
+  maxxBoost: Bytes!
+  # MAXXGenesis address
+  maxxGenesis: Bytes!
+  # Stake Launch Date
+  launchDate: BigInt!
+  # Total number of stakes
   totalStakes: BigInt!
-  totalStakesAllTime: BigInt!
-  totalStakesActive: BigInt!
-  totalStakesMatured: BigInt!
+  # Total active stakes
+  totalStakesActive: BigInt
+  # Total matured stakes
+  totalStakesMatured: BigInt
+  # Total withdrawn stakes
   totalStakesWithdrawn: BigInt!
-  totalStakedOutstandingInterest: BigInt!
+  # Total staked outstanding interest
+  totalStakedOutstandingInterest: BigInt
+  # Total shares
   totalShares: BigInt!
   # Current share factor
   shareFactor: BigInt!
+  # Average stake amount
   avgStakeAmount: BigInt!
+  # Average stake duration
   avgStakeDuration: BigInt!
-  # allStakes # Call stakes
 }
 
-type Day @entity {
-  # Day (1-60)
+type Stake @entity {
+  # Transaction hash
   id: ID!
-  maxxAllocation: BigInt!
-  effectiveMaticDeposits: BigInt!
-  maticDeposited: BigInt!
-  totalDeposits: BigInt!
-  deposits: [Deposit!]! @derivedFrom(field: "day")
-  referrals: [Referral!]! @derivedFrom(field: "day")
+  name: String!
+  owner: Participant!
+  amount: BigInt!
+  shares: BigInt!
+  duration: BigInt!
+  startTime: BigInt!
+  endTime: BigInt!
+  interest: BigInt
+  penalties: BigInt
+  withdrawnTime: BigInt
+  withdrawnAmount: BigInt
+  status: Status!
 }
 
 type Participant @entity {
@@ -42,24 +55,7 @@ type Participant @entity {
   # effectiveDailyDeposits: [BigInt!]!
   # effectiveUserReferrals: [BigInt!]!
   participated: Boolean!
-  deposits: [Deposit!]! @derivedFrom(field: "participant")
-  referrals: [Referral!]! @derivedFrom(field: "referrer")
-}
-
-type Stake @entity {
-  # Transaction hash
-  id: ID!
-  name: String!
-  amount: BigInt!
-  totalShares: BigInt!
-  startTime: BigInt!
-  endTime: BigInt!
-  duration: BigInt!
-  # interest: BigInt!
-  # penalties: BigInt!
-  withdrawnTime: BigInt!
-  withdrawnAmount: BigInt!
-  status: Status!
+  stakes: [Stake!]! @derivedFrom(field: "owner")
 }
 
 type League @entity {

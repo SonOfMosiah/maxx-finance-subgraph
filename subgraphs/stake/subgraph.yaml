@@ -1,33 +1,55 @@
 specVersion: 0.0.4
-description: Liquidity Amplifier Subgraph
+description: MAXX Stake Subgraph
 features:
-    - nonFatalErrors
+  - nonFatalErrors
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: LiquidityAmplifier
+    name: MaxxStake
     network: mumbai
     source:
-      address: '0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40'
-      abi: LiquidityAmplifier
-      startBlock: 27795205
+      abi: MaxxStake
+      address: "0x2fa2F2Db4CAF94c49eF4fF07A3B0737D789ABb51"
+      startBlock: 28590977
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - LiquidityAmplifier
+        - MaxxStake
         - Day
         - Participant
-        - Deposit
-        - Referral
+        - Stake
+        - League
       abis:
-        - name: LiquidityAmplifier
-          file: ./abi/LiquidityAmplifier.json
+        - name: MaxxStake
+          file: ./abi/MaxxStake.json
       eventHandlers:
-        - event: Deposit(indexed address,uint256,indexed address)
-          handler: handleDeposit
-        - event: Claim(indexed address,uint256)
-          handler: handleClaim
+        - event: Stake(indexed uint256,indexed address,uint16,uint256)
+          handler: handleStake
+        - event: Unstake(indexed uint256,indexed address,uint256)
+          handler: handleUnstake
+        - event: StakeNameChange(uint256,string)
+          handler: handleStakeNameChange
+        - event: LaunchDateUpdated(uint256)
+          handler: handleLaunchDateUpdated
+        - event: LiquidityAmplifierSet(address)
+          handler: handleLiquidityAmplifierSet
+        - event: FreeClaimSet(address)
+          handler: handleFreeClaimSet
+        - event: MaxxGenesisSet(address)
+          handler: handleMaxxGenesisSet
+        - event: MaxxBoostSet(address)
+          handler: handleMaxxBoostSet
+        - event: NftBonusPercentageSet(uint8)
+          handler: handleNftBonusPercentageSet
+        - event: NftBonusSet(address,uint256)
+          handler: handleNftBonusSet
+        - event: BaseURISet(string)
+          handler: handleBaseURISet
+        - event: AcceptedNftAdded(address)
+          handler: handleAcceptedNftAdded
+        - event: AcceptedNftRemoved(address)
+          handler: handleAcceptedNftAdded
       file: ./src/mapping.ts

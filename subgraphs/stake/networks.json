@@ -1,14 +1,14 @@
 {
   "polygon": {
     "MaxxStake": {
-      "address": "0xxyz..",
+      "address": "0x2fa2F2Db4CAF94c49eF4fF07A3B0737D789ABb51",
       "startBlock": 456
     }
   },
   "mumbai": {
     "MaxxStake": {
-      "address": "0xxyz..",
-      "startBlock": 456
+      "address": "0x2fa2F2Db4CAF94c49eF4fF07A3B0737D789ABb51",
+      "startBlock": 28590977
     }
   }
 }

@@ -7,7 +7,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service maxx-finance/liquidity-amplifier-mumbai",
+    "deployStake:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-stake-mumbai",
     "deploy:polygon": "graph deploy --studio <insert project-name>"
   },
   "devDependencies": {
