@@ -10,8 +10,8 @@ dataSources:
     network: mumbai
     source:
       abi: LiquidityAmplifier
-      address: "0x0D4800Df7901C3A6216Ee7cd0518856824E77a02"
-      startBlock: 28227137
+      address: '0xaa3950a924a84926e68EeCAb61f58F64Bd807635'
+      startBlock: 28574594
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
