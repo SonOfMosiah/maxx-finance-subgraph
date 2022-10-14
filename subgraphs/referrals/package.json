@@ -7,7 +7,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deployReferrals:mumbai": "graph deploy --product hosted-service ammonwerner1/maxx-referrals-mumbai --network mumbai",
+    "deployReferrals:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-referrals-mumbai --network mumbai",
     "deployReferrals:polygon": "graph deploy --studio <insert project-name> --network polygon"
   },
   "devDependencies": {

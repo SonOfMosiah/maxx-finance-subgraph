@@ -9,7 +9,7 @@
     "build": "graph build",
     "prepare:mumbai": "mustache config/mumbai.json template.yaml > subgraph.yaml",
     "prepare:polygon": "mustache config/polygon.json template.yaml > subgraph.yaml",
-    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service ammonwerner1/amplifier-mumbai --network mumbai",
+    "deployLiquidityAmplifier:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-amplifier-mumbai --network mumbai",
     "deploy:polygon": "graph deploy --studio <insert project-name>"
   },
   "devDependencies": {

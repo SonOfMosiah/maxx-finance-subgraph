@@ -1,7 +1,7 @@
 specVersion: 0.0.4
 description: Maxx Referrals Subgraph
 features:
-    - nonFatalErrors
+  - nonFatalErrors
 schema:
   file: ./schema.graphql
 dataSources:
@@ -9,9 +9,9 @@ dataSources:
     name: LiquidityAmplifier
     network: mumbai
     source:
-      address: '0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40'
       abi: LiquidityAmplifier
-      startBlock: 27795205
+      address: "0x0D4800Df7901C3A6216Ee7cd0518856824E77a02"
+      startBlock: 28227137
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,7 +26,7 @@ dataSources:
         - name: LiquidityAmplifier
           file: ./abi/LiquidityAmplifier.json
       eventHandlers:
-        - event: Deposit(indexed address,uint256,indexed address)
+        - event: Deposit(indexed address,indexed uint256,indexed address)
           handler: handleDeposit
         - event: Claim(indexed address,uint256)
           handler: handleClaim

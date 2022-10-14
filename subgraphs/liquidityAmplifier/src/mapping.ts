@@ -31,7 +31,7 @@ export function handleDeposit(event: amplifier.Deposit): void {
       event.params.amount
     );
     referrer.totalBonus = referrer.totalBonus.plus(
-      event.params.amount.div(BigInt.fromI32(10))
+      event.params.amount.div(BigInt.fromI32(20))
     );
     referrer.save();
     deposit.effectiveAmount = event.params.amount
