@@ -5,12 +5,14 @@ type MaxxStake @entity {
   maxxVault: Bytes!
   # MAXX token address
   maxx: Bytes!
-  # MAXXBoost address
-  maxxBoost: Bytes!
-  # MAXXGenesis address
-  maxxGenesis: Bytes!
+  # FreeClaim address
+  freeClaim: Bytes!
+  # Liquidity Amplifier Address
+  liquidityAmplifier: Bytes!
   # Stake Launch Date
   launchDate: BigInt!
+  # NFT Base URI
+  baseURI: String
   # Total number of stakes
   totalStakes: BigInt!
   # Total active stakes
@@ -29,6 +31,8 @@ type MaxxStake @entity {
   avgStakeAmount: BigInt!
   # Average stake duration
   avgStakeDuration: BigInt!
+  # Array of accepted NFTs
+  acceptedNfts: [Bytes!]!
 }
 
 type Stake @entity {
@@ -41,10 +45,10 @@ type Stake @entity {
   duration: BigInt!
   startTime: BigInt!
   endTime: BigInt!
-  interest: BigInt
-  penalties: BigInt
-  withdrawnTime: BigInt
-  withdrawnAmount: BigInt
+  interest: BigInt!
+  penalties: BigInt!
+  withdrawnTime: BigInt!
+  withdrawnAmount: BigInt!
   status: Status!
 }
 
@@ -70,6 +74,7 @@ type League @entity {
   countInF: BigInt! # > 0.1% of Shares
   countInG: BigInt! # > 1% of Shares
   countInH: BigInt! # > 10% of Shares
+  sortedStakesByShares: [BigInt!]! # sorted stakes by shares
 }
 
 enum Status {

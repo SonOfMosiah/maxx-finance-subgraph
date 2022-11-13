@@ -11,12 +11,12 @@
   },
   "mumbai": {
     "LiquidityAmplifier": {
-      "address": "0xaa3950a924a84926e68EeCAb61f58F64Bd807635",
-      "startBlock": 28574594
+      "address": "0x370D8A0A9b7004663eF1eE743115ab69B5b8AFee",
+      "startBlock": 28676497
     },
     "FreeClaim": {
-      "address": "0xC37C8426F42372FDE13893Bb92f5ba0105A52173",
-      "startBlock": 28557692
+      "address": "0x47D5353C432905df53b7C041e3Fd40c54254536F",
+      "startBlock": 28676489
     }
   }
 }

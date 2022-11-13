@@ -7,8 +7,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deployReferrals:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-referrals-mumbai --network mumbai",
-    "deployReferrals:polygon": "graph deploy --studio <insert project-name> --network polygon"
+    "deploy:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-referrals-mumbai --network mumbai",
+    "deploy:polygon": "graph deploy --studio <insert project-name> --network polygon"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.33.1",

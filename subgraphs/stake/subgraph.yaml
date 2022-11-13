@@ -10,8 +10,8 @@ dataSources:
     network: mumbai
     source:
       abi: MaxxStake
-      address: "0x2fa2F2Db4CAF94c49eF4fF07A3B0737D789ABb51"
-      startBlock: 28590977
+      address: "0xc8641a12c87e03fDF3EDE945e3f7261F3eDa56e0"
+      startBlock: 28678662
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -38,14 +38,6 @@ dataSources:
           handler: handleLiquidityAmplifierSet
         - event: FreeClaimSet(address)
           handler: handleFreeClaimSet
-        - event: MaxxGenesisSet(address)
-          handler: handleMaxxGenesisSet
-        - event: MaxxBoostSet(address)
-          handler: handleMaxxBoostSet
-        - event: NftBonusPercentageSet(uint8)
-          handler: handleNftBonusPercentageSet
-        - event: NftBonusSet(address,uint256)
-          handler: handleNftBonusSet
         - event: BaseURISet(string)
           handler: handleBaseURISet
         - event: AcceptedNftAdded(address)

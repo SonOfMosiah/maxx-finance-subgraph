@@ -7,7 +7,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deployStake:mumbai": "graph deploy --product hosted-service sonofmosiah/maxx-stake-mumbai",
+    "auth": "graph auth --product hosted-service 4d3bc720f6357aeb768e47fd96e8b217",
+    "deploy:mumbai": "graph deploy --product hosted-service omega-maxx-finance/testnet-stakes --network mumbai",
     "deploy:polygon": "graph deploy --studio <insert project-name>"
   },
   "devDependencies": {

@@ -1,4 +1,11 @@
-import { Address, BigInt, ethereum, dataSource } from '@graphprotocol/graph-ts';
+import {
+  Address,
+  BigInt,
+  log,
+  ethereum,
+  dataSource,
+  Bytes,
+} from '@graphprotocol/graph-ts';
 
 import * as stake from '../generated/MaxxStake/MaxxStake';
 
@@ -12,9 +19,10 @@ export function handleStake(event: stake.Stake): void {
   const contract = stake.MaxxStake.bind(dataSource.address());
 
   let stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toHex());
+  let _stake = getStake(stakeId.toString());
 
   let contractStake = contract.stakes(stakeId);
+  let endTime = contract.endTimes(stakeId);
 
   _stake.name = contractStake.value0;
   _stake.owner = contractStake.value1.toHex();
@@ -22,7 +30,7 @@ export function handleStake(event: stake.Stake): void {
   _stake.shares = contractStake.value3;
   _stake.duration = contractStake.value4;
   _stake.startTime = contractStake.value5;
-  _stake.endTime = contractStake.value5.plus(contractStake.value4);
+  _stake.endTime = endTime;
   _stake.status = 'ACTIVE';
   _stake.save();
 
@@ -60,12 +68,53 @@ export function handleStake(event: stake.Stake): void {
 export function handleUnstake(event: stake.Unstake): void {
   const contract = stake.MaxxStake.bind(dataSource.address());
   const stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toHex());
+  let _stake = getStake(stakeId.toString());
+  let withdrawnAmount = event.params.amount;
+  let amount = _stake.amount;
+  _stake.withdrawnAmount = withdrawnAmount;
+  _stake.withdrawnTime = event.block.timestamp;
+  // TODO calculate full interest
+  let timeStaked = event.block.timestamp.minus(_stake.startTime);
+  let daysStaked = timeStaked.div(BigInt.fromI32(86400));
+  let shares = _stake.shares;
+  let duration = _stake.duration;
+  let durationDays = duration.div(BigInt.fromI32(86400));
+  let fullDurationInterest = shares
+    .times(durationDays.div(BigInt.fromI32(365)))
+    .times(BigInt.fromI32(18185))
+    .div(BigInt.fromI32(10000));
+  let interest = daysStaked
+    .times(shares)
+    .times(durationDays)
+    .times(BigInt.fromI32(18185))
+    .div(BigInt.fromI32(10000))
+    .div(BigInt.fromI32(365))
+    .div(durationDays);
+
+  if (interest.gt(fullDurationInterest)) {
+    interest = fullDurationInterest;
+  }
+
+  let fullAmount = amount.plus(interest);
+
+  if (withdrawnAmount.gt(_stake.amount)) {
+    _stake.interest = withdrawnAmount.minus(_stake.amount);
+  } else {
+    log.info('stakeId: {}, fullAmount: {}, withdrawnAmount: {}, penalty: {}', [
+      stakeId.toString(),
+      fullAmount.toString(),
+      withdrawnAmount.toString(),
+      fullAmount.minus(withdrawnAmount).toString(),
+    ]);
+    _stake.penalties = fullAmount.minus(withdrawnAmount);
+  }
   if (event.block.timestamp.lt(_stake.endTime)) {
     _stake.status = 'WITHDRAWN_EARLY';
   } else if (
     event.block.timestamp.gt(
-      _stake.endTime.plus(BigInt.fromI32(86400).times(BigInt.fromI32(14)))
+      _stake.endTime.plus(
+        BigInt.fromI32(86400).times(BigInt.fromI32(14)).div(BigInt.fromI32(336))
+      )
     )
   ) {
     _stake.status = 'WITHDRAWN_LATE';
@@ -76,62 +125,40 @@ export function handleUnstake(event: stake.Unstake): void {
   _stake.save();
 }
 
-function handleStakeNameChange(event: stake.StakeNameChange): void {
+export function handleStakeNameChange(event: stake.StakeNameChange): void {
   const stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toHex());
+  let _stake = getStake(stakeId.toString());
   _stake.name = event.params.name;
   _stake.save();
 }
 
-function handleLaunchDateUpdated(event: stake.LaunchDateUpdated): void {
+export function handleLaunchDateUpdated(event: stake.LaunchDateUpdated): void {
   let maxxStake = getMaxxStake();
-  maxxStake.launchDate = event.params.launchDate;
+  maxxStake.launchDate = event.params.newLaunchDate;
   maxxStake.save();
 }
 
-function handleLiquidityAmplifierSet(event: stake.LiquidityAmplifierSet): void {
+export function handleLiquidityAmplifierSet(
+  event: stake.LiquidityAmplifierSet
+): void {
   let maxxStake = getMaxxStake();
   maxxStake.liquidityAmplifier = event.params.liquidityAmplifier;
   maxxStake.save();
 }
 
-function handleFreeClaimSet(event: stake.FreeClaimSet): void {
+export function handleFreeClaimSet(event: stake.FreeClaimSet): void {
   let maxxStake = getMaxxStake();
   maxxStake.freeClaim = event.params.freeClaim;
   maxxStake.save();
 }
 
-function handleMaxxGenesisSet(event: stake.MaxxGenesisSet): void {
+export function handleBaseURISet(event: stake.BaseURISet): void {
   let maxxStake = getMaxxStake();
-  maxxStake.maxxGenesis = event.params.maxxGenesis;
+  maxxStake.baseURI = event.params.baseUri;
   maxxStake.save();
 }
 
-function handleMaxxBoostSet(event: stake.MaxxBoostSet): void {
-  let maxxStake = getMaxxStake();
-  maxxStake.maxxBoost = event.params.maxxBoost;
-  maxxStake.save();
-}
-
-function handleNftBonusPercentageSet(event: stake.NftBonusPercentageSet): void {
-  let maxxStake = getMaxxStake();
-  maxxStake.nftBonusPercentage = event.params.nftBonusPercentage;
-  maxxStake.save();
-}
-
-function handleNftBonusSet(event: stake.NftBonusSet): void {
-  let maxxStake = getMaxxStake();
-  maxxStake.nftBonus = event.params.nftBonus;
-  maxxStake.save();
-}
-
-function handleBaseURISet(event: stake.BaseURISet): void {
-  let maxxStake = getMaxxStake();
-  maxxStake.baseURI = event.params.baseURI;
-  maxxStake.save();
-}
-
-function handleAcceptedNftAdded(event: stake.AcceptedNftAdded): void {
+export function handleAcceptedNftAdded(event: stake.AcceptedNftAdded): void {
   let maxxStake = getMaxxStake();
   let acceptedNfts = maxxStake.acceptedNfts;
   acceptedNfts.push(event.params.nft);
@@ -139,11 +166,19 @@ function handleAcceptedNftAdded(event: stake.AcceptedNftAdded): void {
   maxxStake.save();
 }
 
-function handleAcceptedNftRemoved(event: stake.AcceptedNftRemoved): void {
+export function handleAcceptedNftRemoved(
+  event: stake.AcceptedNftRemoved
+): void {
   let maxxStake = getMaxxStake();
   let acceptedNfts = maxxStake.acceptedNfts;
-  acceptedNfts = acceptedNfts.filter((nft) => nft != event.params.nft);
-  maxxStake.acceptedNfts = acceptedNfts;
+  let removedNft = event.params.nft;
+  let newAcceptedNfts = new Array<Bytes>();
+  for (let i = 0; i < acceptedNfts.length; i++) {
+    if (acceptedNfts[i] != removedNft) {
+      newAcceptedNfts.push(acceptedNfts[i]);
+    }
+  }
+  maxxStake.acceptedNfts = newAcceptedNfts;
   maxxStake.save();
 }
 
@@ -156,8 +191,8 @@ function getMaxxStake(): MaxxStake {
     maxxStake = new MaxxStake(dataSource.address().toHex());
     maxxStake.maxxVault = contract.maxxVault();
     maxxStake.maxx = contract.maxx();
-    maxxStake.maxxBoost = contract.maxxBoost();
-    maxxStake.maxxGenesis = contract.maxxGenesis();
+    maxxStake.freeClaim = contract.freeClaim();
+    maxxStake.liquidityAmplifier = contract.liquidityAmplifier();
     maxxStake.launchDate = contract.launchDate();
     maxxStake.totalStakes = contract.idCounter();
     maxxStake.totalStakesActive = BigInt.fromI32(0);
@@ -166,6 +201,8 @@ function getMaxxStake(): MaxxStake {
     maxxStake.shareFactor = BigInt.fromI32(1);
     maxxStake.avgStakeAmount = BigInt.fromI32(0);
     maxxStake.avgStakeDuration = BigInt.fromI32(0);
+    let acceptedNfts = new Array<Bytes>();
+    maxxStake.acceptedNfts = acceptedNfts;
     maxxStake.save();
   }
 
@@ -176,6 +213,10 @@ function getStake(id: string): Stake {
   let stake = Stake.load(id);
   if (stake == null) {
     stake = new Stake(id);
+    stake.interest = BigInt.fromI32(0);
+    stake.penalties = BigInt.fromI32(0);
+    stake.withdrawnAmount = BigInt.fromI32(0);
+    stake.withdrawnTime = BigInt.fromI32(0);
   }
   return stake as Stake;
 }
@@ -191,4 +232,68 @@ function getParticipant(id: string): Participant {
     participant.save();
   }
   return participant as Participant;
+}
+
+function calculateLeagues(id: string, totalShares: BigInt): Void {
+  let league = League.load(id);
+  if (id == null) {
+    league = new League(id);
+    let sortedStakesByShares = Array<Stake>();
+    league.sortedStakesByShares = sortedStakesByShares;
+    league.countInA = BigInt.fromI32(0);
+    league.countInB = BigInt.fromI32(0);
+    league.countInC = BigInt.fromI32(0);
+    league.countInD = BigInt.fromI32(0);
+    league.countInE = BigInt.fromI32(0);
+    league.countInF = BigInt.fromI32(0);
+    league.countInG = BigInt.fromI32(0);
+    league.countInH = BigInt.fromI32(0);
+    league.save();
+  }
+
+  let amountA = totalShares.div(BigInt.fromI32(100_000_000));
+  let amountB = totalShares.div(BigInt.fromI32(10_000_000));
+  let amountC = totalShares.div(BigInt.fromI32(1_000_000));
+  let amountD = totalShares.div(BigInt.fromI32(100_000));
+  let amountE = totalShares.div(BigInt.fromI32(10_000));
+  let amountF = totalShares.div(BigInt.fromI32(1_000));
+  let amountG = totalShares.div(BigInt.fromI32(100));
+  let amountH = totalShares.div(BigInt.fromI32(10));
+
+  let index = findIndex(amountA);
+}
+
+function findIndex(amountA: BigInt): BigInt {
+  let index = BigInt.fromI32(0);
+  let i = BigInt.fromI32(0);
+  while (i < amountA) {
+    index = index.plus(BigInt.fromI32(1));
+    i = i.plus(BigInt.fromI32(1));
+  }
+  return index;
+}
+
+// function to insert a new element to a sorted array
+function insertSorted(arr: Array<Stake>, stake: Stake): Array<Stake> {
+  let i = BigInt.fromI32(0);
+  while (i < arr.length) {
+    if (arr[i].shares < stake.shares) {
+      arr.splice(i, 0, stake);
+      return arr;
+    }
+    i = i.plus(BigInt.fromI32(1));
+  }
+  arr.push(stake);
+  return arr;
+}
+
+// sort an array in descending order
+function sortArray(arr: Array<Stake>): Array<Stake> {
+  let sortedArray = Array<Stake>();
+  let i = BigInt.fromI32(0);
+  while (i < arr.length) {
+    sortedArray = insertSorted(sortedArray, arr[i]);
+    i = i.plus(BigInt.fromI32(1));
+  }
+  return sortedArray;
 }

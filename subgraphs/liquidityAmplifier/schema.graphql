@@ -19,8 +19,10 @@ type LiquidityAmplifier @entity {
   totalEffectiveMatic: BigInt!
   # Total Matic Deposited / Maxx Allocation
   totalMaxxPerMatic: BigInt
+  # Array of all deposits
   deposits: [Deposit!]!
   nextDepositUpdateIndex: BigInt!
+  # Array of all referrals
   referrals: [Referral!]!
   nextReferralUpdateIndex: BigInt!
 }
@@ -32,7 +34,7 @@ type Day @entity {
   maticDeposited: BigInt!
   effectiveMaticDeposited: BigInt!
   totalDeposits: BigInt!
-  maxxPerEffectiveMatic: BigInt
+  maxxPerEffectiveMatic: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "day")
   referrals: [Referral!]! @derivedFrom(field: "day")
 }
@@ -40,9 +42,14 @@ type Day @entity {
 type Participant @entity {
   # User Address
   id: ID!
+  # An array of length 60, each element is the total Matic deposited on that day
   dailyDeposits: [BigInt!]!
+  # An array of length 60, each element is the total effective Matic deposited on that day
   effectiveDailyDeposits: [BigInt!]!
+  # An array of length 60, each element is a boolean indicating whether the user claimed for that day
   participated: Boolean!
+  dailyClaimStatus: [Boolean!]!
+  # An array of all deposits made by the user
   deposits: [Deposit!]! @derivedFrom(field: "participant")
 }
 
@@ -86,6 +93,8 @@ type Referrer @entity {
   totalReferrals: BigInt!
   totalReferredAmount: BigInt!
   totalBonus: BigInt!
+  # Amount referrer can expect to receive when they claim their referrals
+  totalMaxxAmount: BigInt
   referrals: [Referral!]! @derivedFrom(field: "referrer")
   status: ClaimStatus!
 }
@@ -101,12 +110,12 @@ type Claim @entity {
   type: ClaimType
 }
 
-enum ClaimType @entity {
+enum ClaimType {
   DEPOSIT
   REFERRAL
 }
 
-enum ClaimStatus @entity {
+enum ClaimStatus {
   PENDING
   CLAIMED
 }

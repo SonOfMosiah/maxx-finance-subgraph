@@ -7,8 +7,8 @@
   },
   "mumbai": {
     "LiquidityAmplifier": {
-      "address": "0xaa3950a924a84926e68EeCAb61f58F64Bd807635",
-      "startBlock": 28574594
+      "address": "0xC002fCD048194963367F29BA16B24D1f38dEF2Dd",
+      "startBlock": 28676497
     }
   }
 }
