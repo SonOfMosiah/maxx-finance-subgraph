@@ -60,11 +60,11 @@ export function handleDeposit(event: amplifier.Deposit): void {
   day.totalDeposits = day.totalDeposits.plus(BigInt.fromI32(1));
   day.save();
 
-  updateMaxxAmounts();
+  // updateMaxxAmounts();
   deposit.day = day.id;
-  let deposits = liquidityAmplifier.deposits;
-  deposits.push(deposit.id);
-  liquidityAmplifier.deposits = deposits;
+  // let deposits = liquidityAmplifier.deposits;
+  // deposits.push(deposit.id);
+  // liquidityAmplifier.deposits = deposits;
   deposit.save();
 
   liquidityAmplifier.totalMatic = liquidityAmplifier.totalMatic.plus(
@@ -136,11 +136,11 @@ export function handleReferral(event: amplifier.Referral): void {
   day.save();
   referral.day = day.id;
   referral.timestamp = event.block.timestamp;
-  let liquidityAmplifier = getLiquidityAmplifier();
-  let referrals = liquidityAmplifier.referrals;
-  referrals.push(referral.id);
-  liquidityAmplifier.referrals = referrals;
-  liquidityAmplifier.save();
+  // let liquidityAmplifier = getLiquidityAmplifier();
+  // let referrals = liquidityAmplifier.referrals;
+  // referrals.push(referral.id);
+  // liquidityAmplifier.referrals = referrals;
+  // liquidityAmplifier.save();
   referral.save();
 }
 
@@ -299,118 +299,118 @@ function getClaim(event: ethereum.Event): Claim {
   return claim as Claim;
 }
 
-function updateMaxxAmounts2(contractDay: BigInt): void {
-  let contract = amplifier.LiquidityAmplifier.bind(dataSource.address());
-  let effectiveAmount: BigInt;
-  let maxxPerEffectiveMatic: BigInt;
-  let liquidityAmplifier = getLiquidityAmplifier();
-  let updateIndex = liquidityAmplifier.nextDepositUpdateIndex.toI32();
-  let nextIndex = BigInt.fromI32(updateIndex);
-  if (liquidityAmplifier.deposits != null) {
-    let depositLength = liquidityAmplifier.deposits.length;
-    for (let i = updateIndex; i < depositLength; i++) {
-      let deposit = Deposit.load(liquidityAmplifier.deposits[i].toString());
-      if (deposit != null && BigInt.fromString(deposit.day).lt(contractDay)) {
-        let day = getSingleDay(BigInt.fromString(deposit.day));
-        if (day.maxxAllocation.equals(BigInt.fromI32(0))) {
-          day.maxxAllocation = contract.getMaxxDailyAllocation(
-            BigInt.fromString(day.id)
-          );
-          day.save();
-        }
-        effectiveAmount = contract.getEffectiveMaticDailyDeposit(
-          BigInt.fromString(day.id)
-        );
-        if (effectiveAmount.gt(BigInt.fromI32(0))) {
-          let maxxAllocation = day.maxxAllocation;
-          maxxPerEffectiveMatic = maxxAllocation.div(effectiveAmount);
-          let maxxAmount = deposit.effectiveAmount.times(maxxPerEffectiveMatic);
-          deposit.maxxAmount = maxxAmount;
-        }
+// function updateMaxxAmounts2(contractDay: BigInt): void {
+//   let contract = amplifier.LiquidityAmplifier.bind(dataSource.address());
+//   let effectiveAmount: BigInt;
+//   let maxxPerEffectiveMatic: BigInt;
+//   let liquidityAmplifier = getLiquidityAmplifier();
+//   let updateIndex = liquidityAmplifier.nextDepositUpdateIndex.toI32();
+//   let nextIndex = BigInt.fromI32(updateIndex);
+//   if (liquidityAmplifier.deposits != null) {
+//     let depositLength = liquidityAmplifier.deposits.length;
+//     for (let i = updateIndex; i < depositLength; i++) {
+//       let deposit = Deposit.load(liquidityAmplifier.deposits[i].toString());
+//       if (deposit != null && BigInt.fromString(deposit.day).lt(contractDay)) {
+//         let day = getSingleDay(BigInt.fromString(deposit.day));
+//         if (day.maxxAllocation.equals(BigInt.fromI32(0))) {
+//           day.maxxAllocation = contract.getMaxxDailyAllocation(
+//             BigInt.fromString(day.id)
+//           );
+//           day.save();
+//         }
+//         effectiveAmount = contract.getEffectiveMaticDailyDeposit(
+//           BigInt.fromString(day.id)
+//         );
+//         if (effectiveAmount.gt(BigInt.fromI32(0))) {
+//           let maxxAllocation = day.maxxAllocation;
+//           maxxPerEffectiveMatic = maxxAllocation.div(effectiveAmount);
+//           let maxxAmount = deposit.effectiveAmount.times(maxxPerEffectiveMatic);
+//           deposit.maxxAmount = maxxAmount;
+//         }
 
-        deposit.save();
-        nextIndex = BigInt.fromI32(i + 1);
-        liquidityAmplifier.nextDepositUpdateIndex = nextIndex;
-        liquidityAmplifier.save();
-      }
+//         deposit.save();
+//         nextIndex = BigInt.fromI32(i + 1);
+//         liquidityAmplifier.nextDepositUpdateIndex = nextIndex;
+//         liquidityAmplifier.save();
+//       }
 
-      if (contractDay.gt(BigInt.fromI32(58))) {
-        let updateIndex = liquidityAmplifier.nextDepositUpdateIndex.toI32();
-        for (let i = updateIndex; i < depositLength; i++) {
-          let deposit = Deposit.load(liquidityAmplifier.deposits[i].toString());
-          if (
-            deposit != null &&
-            BigInt.fromString(deposit.day).gt(BigInt.fromI32(58))
-          ) {
-            let day = getSingleDay(BigInt.fromString(deposit.day));
-            if (day.maxxAllocation.equals(BigInt.fromI32(0))) {
-              day.maxxAllocation = contract.getMaxxDailyAllocation(
-                BigInt.fromString(day.id)
-              );
-              day.save();
-            }
-            effectiveAmount = contract.getEffectiveMaticDailyDeposit(
-              BigInt.fromString(day.id)
-            );
-            if (effectiveAmount.gt(BigInt.fromI32(0))) {
-              let maxxAllocation = day.maxxAllocation;
-              maxxPerEffectiveMatic = maxxAllocation.div(effectiveAmount);
-              day.maxxPerEffectiveMatic = maxxPerEffectiveMatic;
-              day.save();
-              let maxxAmount = deposit.effectiveAmount.times(
-                maxxPerEffectiveMatic
-              );
-              deposit.maxxAmount = maxxAmount;
-            }
-            deposit.save();
-          }
-        }
-      }
-      updateIndex = liquidityAmplifier.nextReferralUpdateIndex.toI32();
-      nextIndex = BigInt.fromI32(updateIndex);
-      if (liquidityAmplifier.referrals != null) {
-        let referralLength = liquidityAmplifier.referrals.length;
-        for (let i = updateIndex; i < referralLength; i++) {
-          let referral = Referral.load(
-            liquidityAmplifier.referrals[i].toString()
-          );
-          if (referral != null) {
-            let day = getSingleDay(BigInt.fromString(referral.day));
-            maxxPerEffectiveMatic = day.maxxPerEffectiveMatic;
-            referral.maxxAmount = referral.referredAmount
-              .div(BigInt.fromI32(20))
-              .times(maxxPerEffectiveMatic);
-            referral.save();
-            nextIndex = BigInt.fromI32(i + 1);
-          }
-        }
-        liquidityAmplifier.nextReferralUpdateIndex = nextIndex;
-        liquidityAmplifier.save();
-      }
-    }
-  }
-}
+//       if (contractDay.gt(BigInt.fromI32(58))) {
+//         let updateIndex = liquidityAmplifier.nextDepositUpdateIndex.toI32();
+//         for (let i = updateIndex; i < depositLength; i++) {
+//           let deposit = Deposit.load(liquidityAmplifier.deposits[i].toString());
+//           if (
+//             deposit != null &&
+//             BigInt.fromString(deposit.day).gt(BigInt.fromI32(58))
+//           ) {
+//             let day = getSingleDay(BigInt.fromString(deposit.day));
+//             if (day.maxxAllocation.equals(BigInt.fromI32(0))) {
+//               day.maxxAllocation = contract.getMaxxDailyAllocation(
+//                 BigInt.fromString(day.id)
+//               );
+//               day.save();
+//             }
+//             effectiveAmount = contract.getEffectiveMaticDailyDeposit(
+//               BigInt.fromString(day.id)
+//             );
+//             if (effectiveAmount.gt(BigInt.fromI32(0))) {
+//               let maxxAllocation = day.maxxAllocation;
+//               maxxPerEffectiveMatic = maxxAllocation.div(effectiveAmount);
+//               day.maxxPerEffectiveMatic = maxxPerEffectiveMatic;
+//               day.save();
+//               let maxxAmount = deposit.effectiveAmount.times(
+//                 maxxPerEffectiveMatic
+//               );
+//               deposit.maxxAmount = maxxAmount;
+//             }
+//             deposit.save();
+//           }
+//         }
+//       }
+//       updateIndex = liquidityAmplifier.nextReferralUpdateIndex.toI32();
+//       nextIndex = BigInt.fromI32(updateIndex);
+//       if (liquidityAmplifier.referrals != null) {
+//         let referralLength = liquidityAmplifier.referrals.length;
+//         for (let i = updateIndex; i < referralLength; i++) {
+//           let referral = Referral.load(
+//             liquidityAmplifier.referrals[i].toString()
+//           );
+//           if (referral != null) {
+//             let day = getSingleDay(BigInt.fromString(referral.day));
+//             maxxPerEffectiveMatic = day.maxxPerEffectiveMatic;
+//             referral.maxxAmount = referral.referredAmount
+//               .div(BigInt.fromI32(20))
+//               .times(maxxPerEffectiveMatic);
+//             referral.save();
+//             nextIndex = BigInt.fromI32(i + 1);
+//           }
+//         }
+//         liquidityAmplifier.nextReferralUpdateIndex = nextIndex;
+//         liquidityAmplifier.save();
+//       }
+//     }
+//   }
+// }
 
-function updateMaxxAmounts(): void {
-  let contract = amplifier.LiquidityAmplifier.bind(dataSource.address());
-  let contractDay = contract.getDay();
-  if (contractDay.lt(BigInt.fromI32(61)) && contractDay.gt(BigInt.fromI32(0))) {
-    let liquidityAmplifier = getLiquidityAmplifier();
-    let previousDay = getSingleDay(contractDay.minus(BigInt.fromI32(1)));
-    let prevTotalDeposits = previousDay.totalDeposits;
-    let prevEffectiveMaticDeposited = previousDay.effectiveMaticDeposited;
-    let prevMaxxAllocation = previousDay.maxxAllocation;
-    if (
-      prevTotalDeposits.gt(BigInt.fromI32(0)) ||
-      prevEffectiveMaticDeposited.gt(BigInt.fromI32(0))
-    ) {
-      let maxxPerEffectiveMatic = prevMaxxAllocation.div(
-        prevEffectiveMaticDeposited
-      );
-      previousDay.maxxAllocation = prevMaxxAllocation;
-      previousDay.maxxPerEffectiveMatic = maxxPerEffectiveMatic;
-      previousDay.save();
-    }
-    updateMaxxAmounts2(contractDay);
-  }
-}
+// function updateMaxxAmounts(): void {
+//   let contract = amplifier.LiquidityAmplifier.bind(dataSource.address());
+//   let contractDay = contract.getDay();
+//   if (contractDay.lt(BigInt.fromI32(61)) && contractDay.gt(BigInt.fromI32(0))) {
+//     let liquidityAmplifier = getLiquidityAmplifier();
+//     let previousDay = getSingleDay(contractDay.minus(BigInt.fromI32(1)));
+//     let prevTotalDeposits = previousDay.totalDeposits;
+//     let prevEffectiveMaticDeposited = previousDay.effectiveMaticDeposited;
+//     let prevMaxxAllocation = previousDay.maxxAllocation;
+//     if (
+//       prevTotalDeposits.gt(BigInt.fromI32(0)) ||
+//       prevEffectiveMaticDeposited.gt(BigInt.fromI32(0))
+//     ) {
+//       let maxxPerEffectiveMatic = prevMaxxAllocation.div(
+//         prevEffectiveMaticDeposited
+//       );
+//       previousDay.maxxAllocation = prevMaxxAllocation;
+//       previousDay.maxxPerEffectiveMatic = maxxPerEffectiveMatic;
+//       previousDay.save();
+//     }
+//     updateMaxxAmounts2(contractDay);
+//   }
+// }
