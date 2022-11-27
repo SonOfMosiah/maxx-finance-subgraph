@@ -1,33 +1,39 @@
 specVersion: 0.0.4
-description: Liquidity Amplifier Subgraph
+description: Free Claim Subgraph
 features:
-    - nonFatalErrors
+  - nonFatalErrors
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: LiquidityAmplifier
+    name: FreeClaim
     network: mumbai
     source:
-      address: '0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40'
-      abi: LiquidityAmplifier
-      startBlock: 27795205
+      abi: FreeClaim
+      address: "0x02D78c10F097637c177aB76B9e0ea6D36E9851f5"
+      startBlock: 29168953
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - LiquidityAmplifier
-        - Day
+        - FreeClaim
         - Participant
-        - Deposit
         - Referral
+        - Referrer
+        - Claim
       abis:
-        - name: LiquidityAmplifier
-          file: ./abi/LiquidityAmplifier.json
+        - name: FreeClaim
+          file: ./abi/FreeClaim.json
       eventHandlers:
-        - event: Deposit(indexed address,uint256,indexed address)
-          handler: handleDeposit
-        - event: Claim(indexed address,uint256)
-          handler: handleClaim
+        - event: UserClaim(indexed address,uint256)
+          handler: handleUserClaim
+        - event: Referral(indexed address,indexed address,uint256)
+          handler: handleReferral
+        - event: MaxxSet(indexed address)
+          handler: handleMaxxSet
+        - event: MerkleRootSet(indexed bytes32)
+          handler: handleMerkleRootSet
+        - event: LaunchDateUpdated(indexed uint256)
+          handler: handleLaunchDateUpdated
       file: ./src/mapping.ts
