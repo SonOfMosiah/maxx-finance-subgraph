@@ -7,11 +7,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: FreeClaim
-    network: mumbai
+    network: matic
     source:
       abi: FreeClaim
-      address: "0x02D78c10F097637c177aB76B9e0ea6D36E9851f5"
-      startBlock: 29168953
+      address: "0xBF924d911042803146901D01B2D518ed3748C4b2"
+      startBlock: 36108150
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

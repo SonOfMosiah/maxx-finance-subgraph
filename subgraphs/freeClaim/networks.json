@@ -1,8 +1,8 @@
 {
   "matic": {
     "FreeClaim": {
-      "address": "0xBBa057ce552C66E447C010113fBf339ec1eb45E5",
-      "startBlock": 456
+      "address": "0xBF924d911042803146901D01B2D518ed3748C4b2",
+      "startBlock": 36108150
     }
   },
   "mumbai": {
