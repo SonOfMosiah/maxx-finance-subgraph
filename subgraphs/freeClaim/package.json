@@ -7,7 +7,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy:mumbai": "graph deploy --product hosted-service maxx-finance/liquidity-amplifier-mumbai",
+    "deploy:mumbai": "graph deploy --product hosted-service omega-maxx-finance/testnet-fc-referrals --network mumbai",
+    "deploy2:mumbai": "graph deploy --product hosted-service omega-maxx-finance/round3-fc-referrals --network mumbai",
     "deploy:polygon": "graph deploy --studio <insert project-name>"
   },
   "devDependencies": {

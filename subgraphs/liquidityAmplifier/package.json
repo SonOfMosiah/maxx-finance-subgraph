@@ -11,7 +11,10 @@
     "prepare:mumbai": "mustache config/mumbai.json template.yaml > subgraph.yaml",
     "prepare:polygon": "mustache config/polygon.json template.yaml > subgraph.yaml",
     "deploy:mumbai": "graph deploy --product hosted-service omega-maxx-finance/testnet-amplifier --network mumbai",
-    "deploy:polygon": "graph deploy --studio <insert project-name>"
+    "deployPublic:mumbai": "graph deploy --product hosted-service omega-maxx-finance/publictestnet-amplifier --network mumbai",
+    "deploy:som": "graph deploy --product hosted-service omega-maxx-finance/publictestnet-amplifier2 --network mumbai",
+    "deploy2:mumbai": "graph deploy --product hosted-service omega-maxx-finance/round3-amplifier --network mumbai",
+    "deploy:polygon": "graph deploy --product hosted-service omega-maxx-finance/maxx-amplifier --network matic"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.33.1",
