@@ -7,11 +7,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: LiquidityAmplifier
-    network: mumbai
+    network: matic
     source:
       abi: LiquidityAmplifier
-      address: '0xaa3950a924a84926e68EeCAb61f58F64Bd807635'
-      startBlock: 28574594
+      address: "0xd7ca3dcfccbF3F1f496bE5A10A8a16c744688117"
+      startBlock: 36108165
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -28,6 +28,18 @@ dataSources:
       eventHandlers:
         - event: Deposit(indexed address,indexed uint256,indexed address)
           handler: handleDeposit
-        - event: Claim(indexed address,uint256)
+        - event: Claim(indexed address,indexed uint256,indexed uint256)
           handler: handleClaim
+        - event: Referral(indexed address,indexed address,uint256)
+          handler: handleReferral
+        - event: ClaimReferral(indexed address,uint256)
+          handler: handleClaimReferral
+        - event: StakeAddressSet(indexed address)
+          handler: handleStakeAddressSet
+        - event: MaxxGenesisSet(indexed address)
+          handler: handleMaxxGenesisSet
+        - event: LaunchDateUpdated(uint256)
+          handler: handleLaunchDateUpdated
+        - event: MaxxGenesisMinted(indexed address,string)
+          handler: handleMaxxGenesisMinted
       file: ./src/mapping.ts

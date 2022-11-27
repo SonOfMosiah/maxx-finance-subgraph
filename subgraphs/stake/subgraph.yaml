@@ -7,11 +7,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: MaxxStake
-    network: mumbai
+    network: matic
     source:
       abi: MaxxStake
-      address: "0xc8641a12c87e03fDF3EDE945e3f7261F3eDa56e0"
-      startBlock: 28678662
+      address: "0x595B17733fF77C9bA5A82a9BfA80a9752d78729C"
+      startBlock: 29126343
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -44,4 +44,8 @@ dataSources:
           handler: handleAcceptedNftAdded
         - event: AcceptedNftRemoved(address)
           handler: handleAcceptedNftAdded
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
       file: ./src/mapping.ts

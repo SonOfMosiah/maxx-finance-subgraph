@@ -19,9 +19,9 @@ export function handleStake(event: stake.Stake): void {
   const contract = stake.MaxxStake.bind(dataSource.address());
 
   let stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toString());
-
   let contractStake = contract.stakes(stakeId);
+  let _stake = getStake(stakeId.toString(), contractStake.value1.toHex());
+
   let endTime = contract.endTimes(stakeId);
 
   _stake.name = contractStake.value0;
@@ -32,6 +32,7 @@ export function handleStake(event: stake.Stake): void {
   _stake.startTime = contractStake.value5;
   _stake.endTime = endTime;
   _stake.status = 'ACTIVE';
+  _stake.lastUpdated = event.block.timestamp;
   _stake.save();
 
   let maxxStake = getMaxxStake();
@@ -68,7 +69,9 @@ export function handleStake(event: stake.Stake): void {
 export function handleUnstake(event: stake.Unstake): void {
   const contract = stake.MaxxStake.bind(dataSource.address());
   const stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toString());
+  let contractStake = contract.stakes(stakeId);
+  let _stake = getStake(stakeId.toString(), event.params.user.toHex());
+  _stake.owner = event.params.user.toHex();
   let withdrawnAmount = event.params.amount;
   let amount = _stake.amount;
   _stake.withdrawnAmount = withdrawnAmount;
@@ -121,14 +124,17 @@ export function handleUnstake(event: stake.Unstake): void {
   } else {
     _stake.status = 'WITHDRAWN';
   }
-
+  _stake.lastUpdated = event.block.timestamp;
   _stake.save();
 }
 
 export function handleStakeNameChange(event: stake.StakeNameChange): void {
+  const contract = stake.MaxxStake.bind(dataSource.address());
   const stakeId = event.params.stakeId;
-  let _stake = getStake(stakeId.toString());
+  let contractStake = contract.stakes(stakeId);
+  let _stake = getStake(stakeId.toString(), contractStake.value1.toHex());
   _stake.name = event.params.name;
+  _stake.lastUpdated = event.block.timestamp;
   _stake.save();
 }
 
@@ -182,6 +188,30 @@ export function handleAcceptedNftRemoved(
   maxxStake.save();
 }
 
+export function handleTransfer(event: stake.Transfer): void {
+  const contract = stake.MaxxStake.bind(dataSource.address());
+  let tokenId = event.params.tokenId;
+  let contractStake = contract.stakes(tokenId);
+  let participant = getParticipant(event.params.from.toHex());
+  let _stake = getStake(tokenId.toString(), participant.id);
+  if (event.params.to === ADDRESS_ZERO || event.params.to === null) {
+    _stake.owner = event.params.from.toHex();
+  } else {
+    let participant = getParticipant(event.params.to.toHex());
+    _stake.owner = participant.id;
+  }
+  _stake.lastUpdated = event.block.timestamp;
+  _stake.save();
+}
+
+export function handleOwnershipTransferred(
+  event: stake.OwnershipTransferred
+): void {
+  let maxxStake = getMaxxStake();
+  maxxStake.owner = event.params.newOwner;
+  maxxStake.save();
+}
+
 function getMaxxStake(): MaxxStake {
   const contract = stake.MaxxStake.bind(dataSource.address());
 
@@ -203,20 +233,36 @@ function getMaxxStake(): MaxxStake {
     maxxStake.avgStakeDuration = BigInt.fromI32(0);
     let acceptedNfts = new Array<Bytes>();
     maxxStake.acceptedNfts = acceptedNfts;
+    maxxStake.owner = contract.owner();
     maxxStake.save();
   }
 
   return maxxStake as MaxxStake;
 }
 
-function getStake(id: string): Stake {
+function getStake(id: string, owner: string): Stake {
   let stake = Stake.load(id);
-  if (stake == null) {
+  if (stake === null) {
     stake = new Stake(id);
+    stake.tokenId = BigInt.fromString(id);
+    stake.name = '';
+    if (owner === null) {
+      stake.owner = ADDRESS_ZERO.toHex();
+    } else {
+      stake.owner = owner;
+    }
+    stake.amount = BigInt.fromI32(0);
+    stake.shares = BigInt.fromI32(0);
+    stake.duration = BigInt.fromI32(0);
+    stake.startTime = BigInt.fromI32(0);
+    stake.endTime = BigInt.fromI32(0);
     stake.interest = BigInt.fromI32(0);
     stake.penalties = BigInt.fromI32(0);
-    stake.withdrawnAmount = BigInt.fromI32(0);
     stake.withdrawnTime = BigInt.fromI32(0);
+    stake.withdrawnAmount = BigInt.fromI32(0);
+    stake.status = 'active';
+    stake.lastUpdated = BigInt.fromI32(0);
+    stake.save();
   }
   return stake as Stake;
 }
@@ -234,66 +280,66 @@ function getParticipant(id: string): Participant {
   return participant as Participant;
 }
 
-function calculateLeagues(id: string, totalShares: BigInt): Void {
-  let league = League.load(id);
-  if (id == null) {
-    league = new League(id);
-    let sortedStakesByShares = Array<Stake>();
-    league.sortedStakesByShares = sortedStakesByShares;
-    league.countInA = BigInt.fromI32(0);
-    league.countInB = BigInt.fromI32(0);
-    league.countInC = BigInt.fromI32(0);
-    league.countInD = BigInt.fromI32(0);
-    league.countInE = BigInt.fromI32(0);
-    league.countInF = BigInt.fromI32(0);
-    league.countInG = BigInt.fromI32(0);
-    league.countInH = BigInt.fromI32(0);
-    league.save();
-  }
+// function calculateLeagues(id: string, totalShares: BigInt): Void {
+//   let league = League.load(id);
+//   if (id == null) {
+//     league = new League(id);
+//     let sortedStakesByShares = Array<Stake>();
+//     league.sortedStakesByShares = sortedStakesByShares;
+//     league.countInA = BigInt.fromI32(0);
+//     league.countInB = BigInt.fromI32(0);
+//     league.countInC = BigInt.fromI32(0);
+//     league.countInD = BigInt.fromI32(0);
+//     league.countInE = BigInt.fromI32(0);
+//     league.countInF = BigInt.fromI32(0);
+//     league.countInG = BigInt.fromI32(0);
+//     league.countInH = BigInt.fromI32(0);
+//     league.save();
+//   }
 
-  let amountA = totalShares.div(BigInt.fromI32(100_000_000));
-  let amountB = totalShares.div(BigInt.fromI32(10_000_000));
-  let amountC = totalShares.div(BigInt.fromI32(1_000_000));
-  let amountD = totalShares.div(BigInt.fromI32(100_000));
-  let amountE = totalShares.div(BigInt.fromI32(10_000));
-  let amountF = totalShares.div(BigInt.fromI32(1_000));
-  let amountG = totalShares.div(BigInt.fromI32(100));
-  let amountH = totalShares.div(BigInt.fromI32(10));
+//   let amountA = totalShares.div(BigInt.fromI32(100_000_000));
+//   let amountB = totalShares.div(BigInt.fromI32(10_000_000));
+//   let amountC = totalShares.div(BigInt.fromI32(1_000_000));
+//   let amountD = totalShares.div(BigInt.fromI32(100_000));
+//   let amountE = totalShares.div(BigInt.fromI32(10_000));
+//   let amountF = totalShares.div(BigInt.fromI32(1_000));
+//   let amountG = totalShares.div(BigInt.fromI32(100));
+//   let amountH = totalShares.div(BigInt.fromI32(10));
 
-  let index = findIndex(amountA);
-}
+//   let index = findIndex(amountA);
+// }
 
-function findIndex(amountA: BigInt): BigInt {
-  let index = BigInt.fromI32(0);
-  let i = BigInt.fromI32(0);
-  while (i < amountA) {
-    index = index.plus(BigInt.fromI32(1));
-    i = i.plus(BigInt.fromI32(1));
-  }
-  return index;
-}
+// function findIndex(amountA: BigInt): BigInt {
+//   let index = BigInt.fromI32(0);
+//   let i = BigInt.fromI32(0);
+//   while (i < amountA) {
+//     index = index.plus(BigInt.fromI32(1));
+//     i = i.plus(BigInt.fromI32(1));
+//   }
+//   return index;
+// }
 
-// function to insert a new element to a sorted array
-function insertSorted(arr: Array<Stake>, stake: Stake): Array<Stake> {
-  let i = BigInt.fromI32(0);
-  while (i < arr.length) {
-    if (arr[i].shares < stake.shares) {
-      arr.splice(i, 0, stake);
-      return arr;
-    }
-    i = i.plus(BigInt.fromI32(1));
-  }
-  arr.push(stake);
-  return arr;
-}
+// // function to insert a new element to a sorted array
+// function insertSorted(arr: Array<Stake>, stake: Stake): Array<Stake> {
+//   let i = BigInt.fromI32(0);
+//   while (i < arr.length) {
+//     if (arr[i].shares < stake.shares) {
+//       arr.splice(i, 0, stake);
+//       return arr;
+//     }
+//     i = i.plus(BigInt.fromI32(1));
+//   }
+//   arr.push(stake);
+//   return arr;
+// }
 
-// sort an array in descending order
-function sortArray(arr: Array<Stake>): Array<Stake> {
-  let sortedArray = Array<Stake>();
-  let i = BigInt.fromI32(0);
-  while (i < arr.length) {
-    sortedArray = insertSorted(sortedArray, arr[i]);
-    i = i.plus(BigInt.fromI32(1));
-  }
-  return sortedArray;
-}
+// // sort an array in descending order
+// function sortArray(arr: Array<Stake>): Array<Stake> {
+//   let sortedArray = Array<Stake>();
+//   let i = BigInt.fromI32(0);
+//   while (i < arr.length) {
+//     sortedArray = insertSorted(sortedArray, arr[i]);
+//     i = i.plus(BigInt.fromI32(1));
+//   }
+//   return sortedArray;
+// }
