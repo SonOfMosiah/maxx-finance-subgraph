@@ -1,12 +1,12 @@
 {
-  "polygon": {
+  "matic": {
     "LiquidityAmplifier": {
-      "address": "0x0D4800Df7901C3A6216Ee7cd0518856824E77a02",
-      "startBlock": 28227137
+      "address": "0xd7ca3dcfccbF3F1f496bE5A10A8a16c744688117",
+      "startBlock": 36108165
     },
     "FreeClaim": {
-      "address": "0xc470F9445d9014e98BaA2B2F8827889E31d8CFE0",
-      "startBlock": 28227135
+      "address": "0xBF924d911042803146901D01B2D518ed3748C4b2",
+      "startBlock": 36108150
     }
   },
   "mumbai": {

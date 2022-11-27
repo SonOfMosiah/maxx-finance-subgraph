@@ -1,14 +1,14 @@
 {
-  "polygon": {
-    "LiquidityAmplifier": {
-      "address": "0xFe4B06f1ED079acF33964CDfcC6cCC6F47454f40",
-      "startBlock": 27795205
-    }
-  },
   "mumbai": {
     "LiquidityAmplifier": {
-      "address": "0xC002fCD048194963367F29BA16B24D1f38dEF2Dd",
-      "startBlock": 28676497
+      "address": "0x6B132EcD138bc6cC0558cf9506d1fa1bcb66166C",
+      "startBlock": 29126339
+    }
+  },
+  "matic": {
+    "LiquidityAmplifier": {
+      "address": "0xd7ca3dcfccbF3F1f496bE5A10A8a16c744688117",
+      "startBlock": 36108165
     }
   }
 }

@@ -1,14 +1,14 @@
 {
-  "polygon": {
+  "matic": {
     "FreeClaim": {
-      "address": "0xxyz..",
+      "address": "0xBBa057ce552C66E447C010113fBf339ec1eb45E5",
       "startBlock": 456
     }
   },
   "mumbai": {
     "FreeClaim": {
-      "address": "0xxyz..",
-      "startBlock": 456
+      "address": "0x02D78c10F097637c177aB76B9e0ea6D36E9851f5",
+      "startBlock": 29168953
     }
   }
 }

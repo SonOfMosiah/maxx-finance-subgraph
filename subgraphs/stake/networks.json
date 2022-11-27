@@ -1,14 +1,14 @@
 {
-  "polygon": {
-    "MaxxStake": {
-      "address": "0x2fa2F2Db4CAF94c49eF4fF07A3B0737D789ABb51",
-      "startBlock": 456
-    }
-  },
   "mumbai": {
     "MaxxStake": {
-      "address": "0xc8641a12c87e03fDF3EDE945e3f7261F3eDa56e0",
-      "startBlock": 28678662
+      "address": "0x3375E8D7183ede3Af7086e480d06772888877649",
+      "startBlock": 29126343
+    }
+  },
+  "matic": {
+    "MaxxStake": {
+      "address": "0x595B17733fF77C9bA5A82a9BfA80a9752d78729C",
+      "startBlock": 29126343
     }
   }
 }
