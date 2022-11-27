@@ -33,13 +33,15 @@ type MaxxStake @entity {
   avgStakeDuration: BigInt!
   # Array of accepted NFTs
   acceptedNfts: [Bytes!]!
+  owner: Bytes!
 }
 
 type Stake @entity {
   # Transaction hash
   id: ID!
+  tokenId: BigInt!
   name: String!
-  owner: Participant!
+  owner: Participant
   amount: BigInt!
   shares: BigInt!
   duration: BigInt!
@@ -50,6 +52,7 @@ type Stake @entity {
   withdrawnTime: BigInt!
   withdrawnAmount: BigInt!
   status: Status!
+  lastUpdated: BigInt!
 }
 
 type Participant @entity {

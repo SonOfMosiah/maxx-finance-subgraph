@@ -20,11 +20,11 @@ type LiquidityAmplifier @entity {
   # Total Matic Deposited / Maxx Allocation
   totalMaxxPerMatic: BigInt
   # Array of all deposits
-  deposits: [Deposit!]!
-  nextDepositUpdateIndex: BigInt!
+  deposits: [Deposit!]
+  nextDepositUpdateIndex: BigInt
   # Array of all referrals
-  referrals: [Referral!]!
-  nextReferralUpdateIndex: BigInt!
+  referrals: [Referral!]
+  nextReferralUpdateIndex: BigInt
 }
 
 type Day @entity {
