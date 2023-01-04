@@ -86,13 +86,16 @@ export function handleUnstake(event: stake.Unstake): void {
     .times(durationDays.div(BigInt.fromI32(365)))
     .times(BigInt.fromI32(18185))
     .div(BigInt.fromI32(10000));
-  let interest = daysStaked
-    .times(shares)
-    .times(durationDays)
-    .times(BigInt.fromI32(18185))
-    .div(BigInt.fromI32(10000))
-    .div(BigInt.fromI32(365))
-    .div(durationDays);
+  let interest = BigInt.fromI32(0);
+  if (durationDays > BigInt.fromI32(0)) {
+    interest = daysStaked
+      .times(shares)
+      .times(durationDays)
+      .times(BigInt.fromI32(18185))
+      .div(BigInt.fromI32(10000))
+      .div(BigInt.fromI32(365))
+      .div(durationDays);
+  }
 
   if (interest.gt(fullDurationInterest)) {
     interest = fullDurationInterest;
@@ -260,7 +263,7 @@ function getStake(id: string, owner: string): Stake {
     stake.penalties = BigInt.fromI32(0);
     stake.withdrawnTime = BigInt.fromI32(0);
     stake.withdrawnAmount = BigInt.fromI32(0);
-    stake.status = 'active';
+    stake.status = 'ACTIVE';
     stake.lastUpdated = BigInt.fromI32(0);
     stake.save();
   }

@@ -10,8 +10,8 @@ dataSources:
     network: matic
     source:
       abi: LiquidityAmplifier
-      address: "0xd7ca3dcfccbF3F1f496bE5A10A8a16c744688117"
-      startBlock: 36108165
+      address: "0x8B3a22019cB68c4cC11Be054124490af33333303"
+      startBlock: 36949883
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

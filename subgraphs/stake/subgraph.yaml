@@ -10,8 +10,8 @@ dataSources:
     network: matic
     source:
       abi: MaxxStake
-      address: "0x595B17733fF77C9bA5A82a9BfA80a9752d78729C"
-      startBlock: 29126343
+      address: "0x3D769818DbD4ed321a2B06342b54513B33333304"
+      startBlock: 36933406
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,7 +26,7 @@ dataSources:
         - name: MaxxStake
           file: ./abi/MaxxStake.json
       eventHandlers:
-        - event: Stake(indexed uint256,indexed address,uint16,uint256)
+        - event: Stake(indexed uint256,indexed address,uint256,uint256)
           handler: handleStake
         - event: Unstake(indexed uint256,indexed address,uint256)
           handler: handleUnstake

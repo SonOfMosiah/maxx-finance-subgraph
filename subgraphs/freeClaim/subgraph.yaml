@@ -10,8 +10,8 @@ dataSources:
     network: matic
     source:
       abi: FreeClaim
-      address: "0xBF924d911042803146901D01B2D518ed3748C4b2"
-      startBlock: 36108150
+      address: "0x7935e1B8c75cE1E1971C42D40DeeEEF588333302"
+      startBlock: 36932758
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
